@@ -142,64 +142,7 @@ const Tree = ({ data }) => {
 }
 
 //File view -------------------------------------------------------
-const FileView = styled.div`
-  display:flex;
-  padding-left:20px;
-  align-items:center;
-  span {
-  margin-left:5px;
-  background-color:${p => (p.name === p.currentFile ? '#b3e4e6' : '')};
-  }
-`
 
-const File = ({ name, depth, path }) => {
-  const [selected, setSelected] = useState(false)
-  const fileType = name.split(".")[1]
-  //here we are implementing thhe global current fileState
-  const fileState = useSelector(s => s.file)
-  const dispatch = useDispatch()
-
-  //Recursive function to find the name of the current file to output to out path
-  const outPath = []
-
-  const findTheFile = (data, name) => {
-    console.log(outPath)
-    return data.map(item => {
-      if (item.type === "file") return outPath.push(item)
-
-      if (item.type === "folder") {
-        return findTheFile(item.childrens)
-      }
-    })
-
-  }
-  useEffect(() => {
-    if (fileState.currentFileName === name) {
-      setSelected(true)
-      console.log(fileState.currentFileName, name)
-    } else {
-      console.log("not hello")
-      setSelected(false)
-    }
-  }, [fileState.currentFileName])
-
-  const setGlobalCurrentFile = (fileName, depth, filePath) => {
-    dispatch(fileActions.addToCurrentFile(fileName))
-    //this is the real function to set the path
-    dispatch(fileActions.addToPathString(filePath + fileName))
-    //Recursively find a file
-    findTheFile(data, fileName)
-  }
-
-
-  return (
-    <FileView name={name} currentFile={fileState && fileState.currentFileName}>
-
-      {fileIcons[fileType] || <AiOutlineFile />}
-      <span onClick={() => setGlobalCurrentFile(name, depth, path)}> {name}  </span>
-    </FileView>
-  )
-}
 
 //FolderView ----------------------------------------------------------
 const FolderComponent = styled.div`
